@@ -14,6 +14,6 @@ jobs:
 
       - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-      - run: docker build -t paula/react-test -f dockerfile.dev .
+      - run: docker build -t paulaadel11/react-test -f dockerfile.dev .
 
-      - run: docker run -e CI=true paula/react-test npm run test
+      - run: docker run -e CI=true paulaadel11/react-test npm run test
