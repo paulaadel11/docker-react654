@@ -11,9 +11,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
       - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-
       - run: docker build -t paulaadel11/react-test -f dockerfile.dev .
-
       - run: docker run -e CI=true paulaadel11/react-test npm run test
+
+      - name: create deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Deploy over elastic beanstalk
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: 'Hosny'
+          environment_name: 'Hosny-env'
+          version_label: ${{github.sha}}
+          region: 'us-east-1'
+          deployment_package: 'deploy.zip'
