@@ -1,0 +1,37 @@
+name: Build and Test
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker build -t paulaadel11/react-test -f dockerfile.dev .
+      - run: docker run -e CI=true paulaadel11/react-test npm run test
+
+      - run: docker build -t paulaadel11/multi-client ./client
+      - run: docker build -t paulaadel11/multi-server ./server
+      - run: docker build -t paulaadel11/multi-nginx ./nginx
+      - run: docker build -t paulaadel11/multi-worker ./worker
+      
+      - run: docker push paulaadel11/multi-client
+      - run: docker push paulaadel11/multi-server
+      - run: docker push paulaadel11/multi-nginx
+      - run: docker push paulaadel11/multi-worker
+      # - name: create deployment package
+      #   run: zip -r deploy.zip . -x '*.git*'
+
+      # - name: Deploy over elastic beanstalk
+      #   uses: einaregilsson/beanstalk-deploy@v20
+      #   with:
+      #     aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+      #     aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     application_name: 'react'
+      #     environment_name: 'React-env'
+      #     version_label: ${{github.sha}}
+      #     region: 'us-east-1'
+      #     deployment_package: 'deploy.zip'
