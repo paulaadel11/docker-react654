@@ -13,11 +13,11 @@ jobs:
       - run: docker build -t paulaadel11/react-test -f dockerfile.dev .
       - run: docker run -e CI=true paulaadel11/react-test npm run test
 
-      - run: docker build -t paulaadel11/multi-client ./client
-      - run: docker build -t paulaadel11/multi-server ./server
-      - run: docker build -t paulaadel11/multi-nginx ./nginx
-      - run: docker build -t paulaadel11/multi-worker ./worker
-      
+      - run: docker build -t paulaadel11/multi-client ./microservices/client
+      - run: docker build -t paulaadel11/multi-server ./microservices/server
+      - run: docker build -t paulaadel11/multi-nginx ./microservices/nginx
+      - run: docker build -t paulaadel11/multi-worker ./microservices/worker
+
       - run: docker push paulaadel11/multi-client
       - run: docker push paulaadel11/multi-server
       - run: docker push paulaadel11/multi-nginx
